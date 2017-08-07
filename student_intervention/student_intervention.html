@@ -11853,14 +11853,14 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Calculate number of students</span>
 <span class="n">n_students</span> <span class="o">=</span> <span class="n">student_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="c1"># TODO: Calculate number of features</span>
-<span class="n">n_features</span> <span class="o">=</span> <span class="n">student_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">n_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">student_data</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
 <span class="c1"># TODO: Calculate passing students</span>
 <span class="n">n_passed</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">student_data</span><span class="p">[</span><span class="s2">&quot;passed&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">)</span>
@@ -11891,7 +11891,7 @@ div#notebook {
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Total number of students: 395
-Number of features: 31
+Number of features: 30
 Number of students who passed: 265
 Number of students who failed: 130
 Graduation rate of the class: 67.09%
@@ -12273,7 +12273,7 @@ Testing set has 95 samples.
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">train_classifier</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">):</span>
@@ -12346,7 +12346,7 @@ Testing set has 95 samples.
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Import the three supervised learning models from sklearn</span>
@@ -12356,8 +12356,8 @@ Testing set has 95 samples.
 
 <span class="c1"># TODO: Initialize the three models</span>
 <span class="n">clf_A</span> <span class="o">=</span> <span class="n">GaussianNB</span><span class="p">()</span>
-<span class="n">clf_B</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
-<span class="n">clf_C</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">()</span>
+<span class="n">clf_B</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">clf_C</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 
 <span class="c1"># TODO: Set up the training set sizes</span>
 <span class="n">X_train_100</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">100</span><span class="p">,</span> <span class="p">:]</span>
@@ -12388,74 +12388,74 @@ Testing set has 95 samples.
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Training a GaussianNB using a training set size of 100. . .
-Trained model in 0.0016 seconds
+Trained model in 0.0030 seconds
 Made predictions in 0.0007 seconds.
 F1 score for training set: 0.8467.
-Made predictions in 0.0005 seconds.
+Made predictions in 0.0008 seconds.
 F1 score for test set: 0.8029.
 
 
 Training a GaussianNB using a training set size of 200. . .
-Trained model in 0.0009 seconds
-Made predictions in 0.0004 seconds.
+Trained model in 0.0017 seconds
+Made predictions in 0.0012 seconds.
 F1 score for training set: 0.8406.
-Made predictions in 0.0005 seconds.
+Made predictions in 0.0010 seconds.
 F1 score for test set: 0.7244.
 
 
 Training a GaussianNB using a training set size of 300. . .
-Trained model in 0.0021 seconds
-Made predictions in 0.0012 seconds.
+Trained model in 0.0028 seconds
+Made predictions in 0.0015 seconds.
 F1 score for training set: 0.8038.
-Made predictions in 0.0006 seconds.
+Made predictions in 0.0011 seconds.
 F1 score for test set: 0.7634.
 
 
 Training a LogisticRegression using a training set size of 100. . .
-Trained model in 0.0013 seconds
-Made predictions in 0.0005 seconds.
+Trained model in 0.0028 seconds
+Made predictions in 0.0008 seconds.
 F1 score for training set: 0.8593.
-Made predictions in 0.0007 seconds.
+Made predictions in 0.0009 seconds.
 F1 score for test set: 0.7647.
 
 
 Training a LogisticRegression using a training set size of 200. . .
-Trained model in 0.0024 seconds
-Made predictions in 0.0005 seconds.
+Trained model in 0.0053 seconds
+Made predictions in 0.0017 seconds.
 F1 score for training set: 0.8562.
-Made predictions in 0.0006 seconds.
+Made predictions in 0.0014 seconds.
 F1 score for test set: 0.7914.
 
 
 Training a LogisticRegression using a training set size of 300. . .
-Trained model in 0.0037 seconds
-Made predictions in 0.0007 seconds.
+Trained model in 0.0060 seconds
+Made predictions in 0.0008 seconds.
 F1 score for training set: 0.8468.
-Made predictions in 0.0003 seconds.
+Made predictions in 0.0005 seconds.
 F1 score for test set: 0.8060.
 
 
 Training a SVC using a training set size of 100. . .
-Trained model in 0.0012 seconds
-Made predictions in 0.0008 seconds.
+Trained model in 0.0030 seconds
+Made predictions in 0.0036 seconds.
 F1 score for training set: 0.8777.
-Made predictions in 0.0009 seconds.
+Made predictions in 0.0017 seconds.
 F1 score for test set: 0.7746.
 
 
 Training a SVC using a training set size of 200. . .
-Trained model in 0.0030 seconds
-Made predictions in 0.0021 seconds.
+Trained model in 0.0055 seconds
+Made predictions in 0.0038 seconds.
 F1 score for training set: 0.8679.
-Made predictions in 0.0011 seconds.
+Made predictions in 0.0022 seconds.
 F1 score for test set: 0.7815.
 
 
 Training a SVC using a training set size of 300. . .
-Trained model in 0.0059 seconds
-Made predictions in 0.0044 seconds.
+Trained model in 0.0111 seconds
+Made predictions in 0.0084 seconds.
 F1 score for training set: 0.8761.
-Made predictions in 0.0019 seconds.
+Made predictions in 0.0032 seconds.
 F1 score for test set: 0.7838.
 
 
@@ -12495,22 +12495,22 @@ F1 score for test set: 0.7838.
 <tbody>
 <tr>
 <td style="text-align:center">100</td>
-<td style="text-align:center">0.0016</td>
-<td style="text-align:center">0.005</td>
+<td style="text-align:center">0.0030</td>
+<td style="text-align:center">0.0007</td>
 <td style="text-align:center">0.8467</td>
 <td style="text-align:center">0.8029</td>
 </tr>
 <tr>
 <td style="text-align:center">200</td>
-<td style="text-align:center">0.0009</td>
-<td style="text-align:center">0.005</td>
+<td style="text-align:center">0.0017</td>
+<td style="text-align:center">0.0012</td>
 <td style="text-align:center">0.8406</td>
 <td style="text-align:center">0.7244</td>
 </tr>
 <tr>
 <td style="text-align:center">300</td>
-<td style="text-align:center">0.0021</td>
-<td style="text-align:center">0.006</td>
+<td style="text-align:center">0.0028</td>
+<td style="text-align:center">0.0015</td>
 <td style="text-align:center">0.8038</td>
 <td style="text-align:center">0.7634</td>
 </tr>
@@ -12529,22 +12529,22 @@ F1 score for test set: 0.7838.
 <tbody>
 <tr>
 <td style="text-align:center">100</td>
-<td style="text-align:center">0.0013</td>
-<td style="text-align:center">0.005</td>
+<td style="text-align:center">0.0028</td>
+<td style="text-align:center">0.0008</td>
 <td style="text-align:center">0.8593</td>
 <td style="text-align:center">0.7647</td>
 </tr>
 <tr>
 <td style="text-align:center">200</td>
-<td style="text-align:center">0.0024</td>
-<td style="text-align:center">0.005</td>
+<td style="text-align:center">0.0053</td>
+<td style="text-align:center">0.0017</td>
 <td style="text-align:center">0.8562</td>
 <td style="text-align:center">0.7914</td>
 </tr>
 <tr>
 <td style="text-align:center">300</td>
-<td style="text-align:center">0.0037</td>
-<td style="text-align:center">0.007</td>
+<td style="text-align:center">0.0060</td>
+<td style="text-align:center">0.0008</td>
 <td style="text-align:center">0.8469</td>
 <td style="text-align:center">0.8060</td>
 </tr>
@@ -12563,22 +12563,22 @@ F1 score for test set: 0.7838.
 <tbody>
 <tr>
 <td style="text-align:center">100</td>
-<td style="text-align:center">0.0012</td>
-<td style="text-align:center">0.0009</td>
+<td style="text-align:center">0.0030</td>
+<td style="text-align:center">0.0017</td>
 <td style="text-align:center">0.8777</td>
 <td style="text-align:center">0.7746</td>
 </tr>
 <tr>
 <td style="text-align:center">200</td>
-<td style="text-align:center">0.0030</td>
-<td style="text-align:center">0.0011</td>
+<td style="text-align:center">0.0055</td>
+<td style="text-align:center">0.0022</td>
 <td style="text-align:center">0.8679</td>
 <td style="text-align:center">0.7815</td>
 </tr>
 <tr>
 <td style="text-align:center">300</td>
-<td style="text-align:center">0.0059</td>
-<td style="text-align:center">0.0019</td>
+<td style="text-align:center">0.0111</td>
+<td style="text-align:center">0.0032</td>
 <td style="text-align:center">0.8761</td>
 <td style="text-align:center">0.7838</td>
 </tr>
@@ -12635,8 +12635,8 @@ F1 score for test set: 0.7838.
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer: </strong></p>
-<p>Given our training data, the classifier will learn the underlying trend of students who fail vs those who don't. The model receives all the performance indicators in its input and assigns each student with his/her set of indicators a weight.</p>
-<p>Given a new student whose data we do not have, the performance indicators will again be fed into the classifier to get a wieght. This weight will decide which category the student falls in and helps in preventive measures</p>
+<p>Given our training data, the classifier will learn the underlying trend of students who fail vs those who don't. Logistic Regression takes features about previous students (eg, their age, gender, etc) and creates a model that assigns a "weight" to these features that assess their importance in determining whether a student passed or failed. The feature weights are learned by the model by observing the underlying trend in the data. This helps it classify a later student, whose pass or fail criteria is not known yet.</p>
+<p>When we want to predict an outcome for a new student , we take the new student's features and combine them with the learning that the classifier had in the previous step. It can now via its observation of the underlying data predict the right category for the student.</p>
 
 </div>
 </div>
@@ -12667,7 +12667,7 @@ F1 score for test set: 0.7838.
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Import &#39;GridSearchCV&#39; and &#39;make_scorer&#39;</span>
@@ -12711,9 +12711,9 @@ F1 score for test set: 0.7838.
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Made predictions in 0.0003 seconds.
+<pre>Made predictions in 0.0005 seconds.
 Tuned model has a training F1 score of 0.8330.
-Made predictions in 0.0003 seconds.
+Made predictions in 0.0005 seconds.
 Tuned model has a testing F1 score of 0.7857.
 </pre>
 </div>
@@ -12741,7 +12741,7 @@ Tuned model has a testing F1 score of 0.7857.
 <p><strong>Answer: </strong></p>
 <p>F1 score [training]: 0.8330</p>
 <p>F1 score [testing]:  0.7857</p>
-<p>The final F1 score of the tuned model is higher than the untuned model and it is also higher than the value observed in Naive Bayes as expected.</p>
+<p>The final F1 score of the tuned model is higher than the untuned model in the case of 100 samples, but with 200 and 300 samples, currently the untuned model has done better.</p>
 
 </div>
 </div>
