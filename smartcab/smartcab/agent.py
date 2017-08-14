@@ -44,8 +44,8 @@ class LearningAgent(Agent):
             self.epsilon = 0
             self.alpha = 0
         else:
-            self.epsilon = self.epsilon * 0.88
-            #self.epsilon = self.epsilon - 0.05
+            # self.epsilon = self.epsilon * 0.88
+            self.epsilon = self.epsilon - 0.05
         return None
 
     def build_state(self):
@@ -129,7 +129,7 @@ class LearningAgent(Agent):
                     Environment.valid_actions)
                 action = random.choice(valid_actions)
             else:
-                action = action_with_max_Q
+                action = random.choice(Environment.valid_actions)
         else:
             action = random.choice(Environment.valid_actions)
         return action
@@ -145,8 +145,8 @@ class LearningAgent(Agent):
         ###########
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
-
-        self.Q[state][action] = (self.Q[state][action] * (1- self.alpha)) + (reward * self.alpha)
+        if self.learning:
+            self.Q[state][action] = (self.Q[state][action] * (1- self.alpha)) + (reward * self.alpha)
         return
 
 
@@ -182,7 +182,7 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    kwargs = {'learning' : True, 'alpha': 0.5}
+    kwargs = {'learning' : True}
     agent = env.create_agent(LearningAgent, **kwargs)
     
     ##############
@@ -202,15 +202,15 @@ def run():
     update_delay = 0.0001
     log_metrics = True
     optimized = True
-    sim = Simulator(env,update_delay=update_delay, log_metrics=log_metrics, optimized=optimized)
+    sim = Simulator(env,update_delay=update_delay, log_metrics=log_metrics, display=True)
     
     ##############
     # Run the simulator
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    n_test=10
-    sim.run(n_test=n_test, tolerance=0.01)
+    n_test=100
+    sim.run(n_test=n_test)
 
 
 if __name__ == '__main__':
