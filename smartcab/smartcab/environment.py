@@ -90,7 +90,8 @@ class Environment(object):
 
     def create_agent(self, agent_class, *args, **kwargs):
         """ When called, create_agent creates an agent in the environment. """
-
+        # print self
+        # print "line 93"
         agent = agent_class(self, *args, **kwargs)
         self.agent_states[agent] = {'location': random.choice(self.intersections.keys()), 'heading': (0, 1)}
         return agent
