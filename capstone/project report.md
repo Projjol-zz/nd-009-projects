@@ -9,9 +9,11 @@ August 22nd, 2017
 Stock price prediction has been an interesting and hard problem for quite a while now. The information it provides can give an individual or even a firm a strong overview of what is to come helping them plan for the same. My motivation for the project stems out of my interest in the 2008 economic crash. While I was quite young at that point, I remember it as a defining moment in our history. Later on, as I grew up, I tried to collect as much information about the event as possible. Throughout this process, all that was there in my mind was, how could Wall Street not see this coming? The answer to that I would think is cognitive bias. I think this is a blatant example of the normalcy bias, wherein even in moments of grave danger, one pretends as if everything is fine. With the knowledge that I acquired through the course of the nanodegree, I felt I could help create a prediction tool, which would provide people with data that can help them get over this bias, and help me understand the stock market better. 
 
 In this project, I will be using technical analysis as a method to make sense of the data and make accurate predictions from it. In technical analysis past trading activity and price changes of a security are better indicators of the security's likely future price movements, which is the eventual goal in this project. Technical analysis derives from two underlying principles:
+
 * Market price discounts every factor that may influence a security's price
 * Market price movements are not purely random but move in identifiable patterns and trends that repeat over time
-For technical analysis to be used, technical indicators will be used for forecasting future prices. More on this in the later sections.
+
+For technical analysis to be used, technical indicators will be used for forecasting future prices. As the primary target here is to find a machine learning model that can accurately predict the price of an index on the basis of these technical indicators I would consider this as a regression problem [using linear regression in particular]. More on this in the later sections.
 
 
 The other forms of financial analysis that are available to us but not used in this project are :
@@ -46,7 +48,7 @@ I belive the fundamnetal problem at hand is one of regression and for regression
 
 ![MAE formula](http://i.imgur.com/q8lQz2c.gif )
 
-In this case, the MAE calculates the mean difference in values over the predicted and correct values. A high MAE shows that the model is not working the way it should and has not learnt the trend of the underlying data. A low MAE shows the very opposite of that, i.e the model has learnt the trend of the underlying data and fit itself well to it. 
+In this case, the MAE calculates the mean difference in values over the predicted and correct values. A high MAE shows that the model is not working the way it should and has not learnt the trend of the underlying data. A low MAE shows the very opposite of that, i.e the model has learnt the trend of the underlying data and fit itself well to it. Another option might be to use MSE [Mean Squared Error], however I would still maintain that I'd rather use MAE as it treats/weighs every element equally. With MSE, higher values correspond to higher weightage in the final value, as smaller values are close to their square anyway. In such a case, MAE handles outliers better than MSE. Given the dynamic nature of the historical nature, I would definitely prefer a metric that smoothly handles outliers. 
 
 ## II. Analysis
 
@@ -57,6 +59,7 @@ The data being used in this project is sourced via the Yahoo Finance API. Since 
 ![data describe](http://i.imgur.com/tLiDXp1.png)
 
 As mentioned before the CSV has the following columns:
+
 * Date: The date the below parameters were observed
 * Open: Price of the stock [in our case value of the index] in the beginning of the day
 * High: Highest recorded price/value recorded in that day of trading           
@@ -65,24 +68,82 @@ As mentioned before the CSV has the following columns:
 * Adjusted Close: Adjusted close price for stock splits/joins in the day [note: this feature is more important when considering specific companies and not entire indexes such as the S&P 500]
 * Volume: Total number of shares traded in that day
 
+####Additional features for the dataset:
+
+* Open: max: 2270.54 min: 679.28 range: 1591.26
+* High: max: 2277.53 min: 695.27 range: 1582.26
+* Low: max: 2266.14 min: 666.78 range: 1599.36
+* Close: max: 2271.71 min: 676.53 range: 1595.19
+* Adjusted Close: max: 676.53 min: 676.53 range: 1595.19
+* Volume: max: 1.145623e+10 min: 3.560700e+08 range: 1110.016e+10
+
+What I think is interesting about the above stats is that most of the daily prices apart from Volume are in the same range and have similar maximum and minimum values. At a glance what this signifies to me is a stable upwards increase of the index over a period of time. Granted this assumption failed in 2008, but those were different and difficult times. In general, I think this stability of the index and a positive upward momentum rightfully justifies the role the S&P 500 index has as a litmus test of the American economy.
+
 ### Exploratory Visualization
 Below are plots of all the price points that we get from historical data csv file:
 
-![Open](http://i.imgur.com/Hq14bL9.png)
-![Close](http://i.imgur.com/SyYLm45.png)
-![High](http://i.imgur.com/unyz719.png)
-![Low](http://i.imgur.com/XiXLO2O.png)
+![combo one](http://i.imgur.com/l1Klk5E.png)
 ![Adj Close](http://i.imgur.com/gGmjcwi.png)
-![Volume](http://i.imgur.com/IwmYLZN.png)
+![Volume](http://i.imgur.com/k3B0rLg.png)
 
 All the features together:
-![Together](http://i.imgur.com/JRszpnj.png)
+![Together](http://i.imgur.com/R0alIEF.png)
+
+A key observation here is that while Open, High, Close, Adjusted Close are in the same scale, Volume is at a much higher scale, about 10^6 greater than. The reason for that is that Volume corresponds to the total number of shares monitored by the index in that day. To give some more perspective to this, volume is the number of shares of the top American companies, conglomerates that have a huge impact on the global economy, that are traded in a day. I would be rather surprised if the order of magnitude was not this high!  
+
+Upon going through the historical data CSV file the reader would notice gaps in the data. These gaps are usually corresponding to holidays and weekends for which there are no observations. I feel these gaps would not affect the model as the model is presented the data as if it was a continous set, i.e for holidays those dates are not recorded as null or 0 values which the model might consider as useful information.
 
 An interesting observation is that all the values of the individual features are quite similar. The reason for this is that in a stable index such as the S&P 500, individual parameters don't stray afar from each other, as a whole the index does well or poorly. It's worthwhile to note the spike in the graphs around 2008-2009 which corresponds to the global economic meltdown, very low volumes for very high prices.
+
 
 ### Algorithms and Techniques
 Given that this is a regression problem, I would like to use linear regression as my learner for a given input. The input itself will be a set of technical indicators. The dependant value, or the value that needs to be predicted would be the 'price' variable. Linear regression helps us model the relationship between a scalar dependant variable [y] and a set of explanatory variables [X]. If the learner is successfull, it would understand the trend of the underlying data and the corresponding MAE would be small. For further refinement and improvement I would like to try a SVM implementation. 
 
+#### Linear Regression
+One of the most compelling reasons for using linear regression, I felt lay in the definition of the technique itself:
+
+*In statistics, linear regression is an approach for modeling the relationship between a scalar dependent variable y and one or more explanatory variables (or independent variables) denoted X*
+
+Given the nature of the problem, a set of technical indicators (mentioned below) [independant variables X in the above definition] are used to predict the Adjusted Close price [scalar dependant variable Y in the definition]. 
+
+Pros:
+
+* I feel the problem itself has a linear nature which is a tight fit with linear regression conceptually 
+* In terms of implementation, if the right co-efficients for the technical indicators and constant for the equation are learned the model should be able to predict the right index value. 
+
+Cons:
+
+* Linear regression is sensitive to outliers. A stable relationship cannot be learned if the data has too many outliers. As can be seen with the residual plot later, this does not affect this particular case, but it's still worth keeping in mind
+* Overfitting. It's possible that if the data's trend is too complicated, the model doesn't learn at all and bases itself on random noise in the data. The curse of dimensionality as taught during the course is something that I considered while researching this problem. Consequently, a counter to this problem would be to have lesser parameters for the model to learn from.
+
+#### SVM
+
+Support Vector Machine [SVM] is a supervised machine learning algorithm that is used for classification and regression challenges. It is best known for classification problems as it is very good at learning the right decision boundary that separates the data. In regression, while the basic idea behind the SVM remains the same, the objective is to find the right hyperplane that can model the underlying trend of the data by tweaking parameters unique to the SVM algorithm [in this case the C parameter]
+
+Pros:
+
+* It can learn a great deal from a subset of the training points which is very advantageous
+* SVMs are good at finding out a global minimum and do not get stuck in a local minimum
+* Scales well to high dimensional data
+
+Cons:
+
+* As with the linear regression technique, SVMs too face the problem of over-fitting though this can be handled by tweaking the kernel parameters being used
+* Training SVMs with very large example sets can be an expensive operation because of the time taken
+
+Another possible algorithm that can be used in this problem is :
+
+#### Artificial Neural Network
+
+An ANN is a computational model that is based on biological neural networks. What I find most fascinating about this algorithm is that the way weights of each layer is similar to the chemical threshold value in our neurons beyond which information passes through the synapse to the next set of neurons. 
+
+Pros:
+
+* ANN looks at samples of the data and not the entire data, this can be helpful in a time series based data problem such as this one
+
+Cons:
+
+* ANNs have an unfortunate tendency to get stuck in a local minima that impedes further progress
 
 ### Benchmark
 Luckily, there exists an industry standard that monitors the fluctuaions in the value of the 'price' component of our data. It is the CBOE VIX [Chicago Board Options Exchange Volatility Index] value. The VIX value changes everyday and is a benchmark to analysts and traders as to how much volatility one might see in the data for that trading day. From the CBOE's website, I downloaded VIX values from 1998-2017. Computing an average VIX value on these inputs, I got the value as : 14.82. Thus, the goal for the linear regression learner is to predict prices that are better/lower than the average VIX value. To carry out this comparision, the metric defined above, the MAE will be useful.
@@ -119,10 +180,12 @@ It is time to implement the linear regression learning model. The linear regress
 
 In this equation, y is predicted price, xi is the technical indicator and ki and b are co-effcients that need to be tuned to get the right value. 
 
-Once the regression model is fixed, I would split the data into two parts, the training set and the test set. The need to do this as has been made clear during the nanodegree is to overcome the problems of overfitting and to check how accurate our predictions are. 
+Once the regression model is fixed, I would split the data into two parts, the training set and the test set. The division of data is relatively staright forward, 70% of the data is used for the training set and the remaining is a part of the test set. The reason behind having a large train set is because I beleive that the data has a fair amount of complexity which can be learnt by the regression models only when enough samples have been shown to it. The need to do this as has been made clear during the nanodegree is to overcome the problems of overfitting and to check how accurate our predictions are. 
 
 ### Refinement
-The previous section saw the implementation of a simple learning model using linear regression. In this section, I will buid a new learning agent using SVM. A major difference in my approach to SVM vis-a-vis the linear regression model would be the selection of hyperpaarameters. The best way for to choose hyperparameters for the model are via cross-validation I feel. In cross validation one creates ultiple train-test sets or folds and runs the model on many combinations of these folds. One point that needs to be kept in mind here is that during the course, cross-validation was used by running random training data on the model, however, given the time sensitive information held by this dataset random selection is not possible. To mitigate this issue for every nth fold, the train set should run on 1..n and the test set should run on the n+1th fold. For example :
+The previous section saw the implementation of a simple learning model using linear regression. In this section, I will buid a new learning agent using SVM. A major difference in my approach to SVM vis-a-vis the linear regression model would be the selection of hyperparameters. In this implementation, the parameter being tuned is the C parameter. The C parameter is fundamental to the amount of mis-classification the model should allow. Low values of C allow for large mis-classifications, whereas high values of C allow for lesser mis-classification. In this implementation, the values of C used are : [0.01, 0.1, 1.0, 10.0, 50.0, 100.0]. As might be expected, the least possible MAE [45.54] is observed on the C value of 100.0, which promotes the least amount of mis-classification.  
+
+The best way for to choose hyperparameters for the model are via cross-validation I feel. In cross validation one creates multiple train-test sets or folds and runs the model on many combinations of these folds. One point that needs to be kept in mind here is that during the course, cross-validation was used by running random training data on the model, however, given the time sensitive information held by this dataset random selection is not possible. To mitigate this issue for every nth fold, the train set should run on 1..n and the test set should run on the n+1th fold. For example :
 
 If there are 3 folds,
 
@@ -176,3 +239,6 @@ An idea I'm interested in exploring is the possibility of using boosting in this
 * [Double Exponential Moving Average](http://www.investopedia.com/articles/trading/10/double-exponential-moving-average.asp)
 * [Directional Moving Index](http://www.investopedia.com/terms/d/dmi.asp)
 * [Cross Validation of Time Series Data](http://francescopochetti.com/pythonic-cross-validation-time-series-pandas-scikit-learn/)
+* [Predicting Google's stock price via Linear Regression](http://beancoder.com/linear-regression-stock-prediction/)
+* [SVM in stock prediction](https://www.cs.princeton.edu/sites/default/files/uploads/saahil_madge.pdf)
+* [Stock Market Forecasting Using Machine Learning Algorithms](http://cs229.stanford.edu/proj2012/ShenJiangZhang-StockMarketForecastingusingMachineLearningAlgorithms.pdf)
